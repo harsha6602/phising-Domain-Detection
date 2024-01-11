@@ -1,0 +1,174 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+.container {
+  position: relative;
+}
+
+/* Apply basic styles to the navbar */
+.navbar {
+  background-color: #000000; /* Set the background color */
+  overflow: hidden; /* Clear floats */
+}
+
+/* Style the navigation links */
+/* Center and position the navbar at the top center of the screen */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  background-color: #333;
+  overflow: hidden;
+  text-align: center; /* Center-align the text within the navbar */
+  z-index: 1000; /* Set a higher z-index to ensure it appears above other elements */
+}
+
+/* Style the navigation links */
+.navbar a {
+  display: inline-block; /* Display links in a row */
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  border-radius: 10px;
+  margin: 0 10px; /* Add some margin between links for spacing */
+}
+
+/* Change the color of links on hover */
+.navbar a:hover {
+  background-color: #ddd !important;
+  color: black !important;
+}
+
+/* Style the active link */
+.navbar a.active {
+  transition: background-color 0.15s, color 1s;
+  color: white;
+}
+
+/* Style additional active links (active1 and active2) if needed */
+.navbar a.active1 {
+  transition: background-color 0.15s, color 1s;
+  color: white;
+}
+
+.navbar a.active2 {
+  transition: background-color 0.15s, color 1s;
+  color: white;
+}
+
+
+.content {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 700px;
+  color: rgb(12, 11, 11);
+  z-index: 1;
+}
+
+.header-text {
+  font-family: Arial;
+  font-size: 50px;
+  font-weight: bold;
+  line-height: 40px;
+  color: rgb(255, 255, 255);
+  margin-bottom: 20px;
+  text-transform: none;
+  position: relative;
+  z-index: 2;
+  letter-spacing: 3px;
+  color: #fff; /* Set the text color to white */
+}
+
+.cursor {
+  position: fixed;
+  width: 15px;
+  height: 15px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%;
+  z-index: 0; /* Updated z-index to 0 */
+  transition: transform 0.2s ease-out;
+}
+
+.input-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-input-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-input {
+  padding: 10px 40px 10px 10px;
+  border: 1px solid rgb(253, 252, 252);
+  border-radius: 15px;
+  margin-bottom: 20px;
+  color: rgb(255, 255, 255);
+  height: 35px;
+  width: 425px;
+  font-size: 16px;
+  font-weight: bold;
+  box-sizing: border-box;
+  background: transparent 50%;
+  letter-spacing: 2px;
+}
+
+.user-input::placeholder {
+  color: rgb(255, 255, 255);
+}
+
+.clear-icon {
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  top: 19px;
+  transform: translateY(-50%);
+  font-size: 20px;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.986);
+  z-index: 3;
+}
+
+.clear-icon:hover {
+  color: rgb(99, 95, 95);
+  border-radius: 10px;
+}
+
+.scan-button {
+  background-color: white;
+  color: #2976d3;
+  border-color: rgb(41, 118, 211);
+  border-style: solid;
+  border-width: 1px;
+  height: 45px;
+  width: 100px;
+  border-radius: 8px;
+  transition: background-color 0.15s, color 1s;
+  font-family: Arial;
+  font-weight: bold;
+  font-size: 105%;
+  cursor: pointer;
+}
+
+.scan-button:hover {
+  background-color: rgb(0, 87, 179);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+  color: white;
+}
+

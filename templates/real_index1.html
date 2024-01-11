@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quanta AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='index_style.css') }}">  
+</head>
+
+<body>
+  <div class="navbar">
+  <a href="#home" target="_blank" class="active">Home</a>
+  <a href="#about" target="_blank" class="active1">About</a>
+ <a href="#faqs" target="_blank" class="active2">FAQs</a>
+</div>
+  <div id="app" class="container">
+    <div id="home" class="content">
+       <div class="header-text">Quanta AI</div>
+       <!-- <div> <img src="static/photo4.png" width="230" alt="Quanta AI"> </div> -->
+       <form action="/check_phishing" method="post" class="input-section">
+         <div class="user-input-container">
+           <input type="text" class="user-input" id="userInput" name="url" placeholder="https://example.com" autofocus>
+           <span class="clear-icon" onclick="document.getElementById('userInput').value = ''; event.stopPropagation();">✕</span>
+         </div>
+         <button type="submit" class="scan-button">Scan</button>
+       </form>
+     </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/build/three.module.js';
+
+const cursor = document.getElementById('cursor');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+const holographicMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    time: { value: 1.0 },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform float time;
+    varying vec2 vUv;
+    void main() {
+      vec2 uv = vUv;
+      uv.x += time * 0.1;
+      vec3 color = vec3(0.5 + 0.5 * sin(time), 0.5 + 0.5 * cos(time), 1.0);
+      vec3 gradientColor = mix(vec3(0.0, 0.0, 1.0), color, uv.y);
+      gl_FragColor = vec4(gradientColor, 1.0);
+    }
+  `,
+});
+
+const ParticleMaterial = new THREE.PointsMaterial({
+  color: 0xffffff,
+  size: 0.2,
+  map: new THREE.TextureLoader().load('https://threejsfundamentals.org/threejs/resources/images/w.png'),
+  blending: THREE.AdditiveBlending,
+  transparent: true,
+});
+
+const cubes = [];
+const particles = new THREE.Group();
+scene.add(particles);
+
+const MAX_CUBES = 7; // Maximum number of cubes
+
+function createCube() {
+  if (cubes.length < MAX_CUBES) {
+    const maxSize = 10;
+    const cubeSize = Math.random() * (maxSize - 2) + 2;
+    const cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+    const cubeMesh = new THREE.Mesh(cubeGeometry, holographicMaterial);
+    scene.add(cubeMesh);
+    resetCubePosition(cubeMesh);
+    cubes.push(cubeMesh);
+    cubeMesh.scale.set(0.1, 0.1, 0.1);
+  }
+}
+
+function resetCubePosition(cube) {
+  const sectionWidth = window.innerWidth / 3;
+  const spawnDistance = 50;
+  const section = Math.floor(Math.random() * 3);
+
+  if (section === 0) {
+    cube.position.x = -spawnDistance;
+  } else if (section === 1) {
+    cube.position.x = 0;
+  } else {
+    cube.position.x = spawnDistance;
+  }
+
+  cube.position.y = Math.random() * spawnDistance * 2 - spawnDistance;
+  cube.position.z = -spawnDistance;
+}
+
+function createParticle(position) {
+  const particleGeometry = new THREE.BufferGeometry();
+  const vertices = [];
+
+  for (let i = 0; i < 100; i++) {
+    const x = (Math.random() - 0.5) * 2;
+    const y = (Math.random() - 0.5) * 2;
+    const z = (Math.random() - 0.5) * 2;
+
+    vertices.push(x, y, z);
+  }
+
+  particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+  const particle = new THREE.Points(particleGeometry, ParticleMaterial);
+  particle.position.copy(position);
+  particles.add(particle);
+}
+
+function detectCollisions() {
+  for (let i = 0; i < cubes.length; i++) {
+    for (let j = i + 1; j < cubes.length; j++) {
+      const cube1 = cubes[i];
+      const cube2 = cubes[j];
+      const distance = cube1.position.distanceTo(cube2.position);
+
+      if (distance < cube1.scale.x + cube2.scale.x) {
+        createParticle(cube1.position);
+        createParticle(cube2.position);
+      }
+    }
+  }
+}
+
+function clearOutOfFrameCubes() {
+  for (let i = cubes.length - 1; i >= 0; i--) {
+    const cube = cubes[i];
+    if (cube.position.z > 30) {
+      scene.remove(cube);
+      cubes.splice(i, 1);
+    }
+  }
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  cubes.forEach((cube) => {
+    cube.rotation.x += 0.001;
+    cube.rotation.y += 0.001;
+    cube.position.z += 0.01;
+    cube.scale.x += 0.0005;
+    cube.scale.y += 0.0005;
+    cube.scale.z += 0.0005;
+
+    if (cube.position.z > 25) {
+      resetCubePosition(cube);
+      cube.scale.set(0.1, 0.1, 0.1);
+    }
+  });
+
+  detectCollisions();
+  clearOutOfFrameCubes();
+
+  holographicMaterial.uniforms.time.value += 0.01;
+  renderer.render(scene, camera);
+}
+
+document.addEventListener('mousemove', (e) => {
+  const x = e.clientX - cursor.offsetWidth / 2;
+  const y = e.clientY - cursor.offsetHeight / 2;
+  cursor.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+window.addEventListener('resize', () => {
+  const newWidth = window.innerWidth;
+  const newHeight = window.innerHeight;
+
+  camera.aspect = newWidth / newHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(newWidth, newHeight);
+});
+
+function clearInput() {
+  document.getElementById('userInput').value = '';
+}
+
+function scan() {
+  console.log('Scanning...');
+}
+
+// Smooth scrolling for navigation links
+document.addEventListener('DOMContentLoaded', function() {
+  const navLinks = document.querySelectorAll('.nav-type a');
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      const targetId = this.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+
+      if (targetElement) {
+        // Scroll to the target element smoothly
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+});
+
+// Create cubes immediately when the webpage loads
+createCube();
+
+// Adjust interval timing based on your preference
+setInterval(createCube, 3000);
+setInterval(clearOutOfFrameCubes, 60000);
+
+animate();
+
+  </script>
+</body>
+
+</html>
